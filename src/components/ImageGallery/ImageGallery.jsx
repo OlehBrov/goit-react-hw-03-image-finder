@@ -79,15 +79,21 @@ export class ImageGallery extends Component {
     console.log('largeImg', largeImg);
     this.props.modalWindowHandler(largeImg);
     console.log('state after find', this.state);
-    
   };
   render() {
     if (this.state.status === STATUS.IDLE) {
       return (
-       <ListContainer> <IdleView/></ListContainer>
+        <ListContainer>
+          {' '}
+          <IdleView />
+        </ListContainer>
       );
     } else if (this.state.status === STATUS.PENDING) {
-      return <ListContainer><PendingView/>;</ListContainer>
+      return (
+        <ListContainer>
+          <PendingView />;
+        </ListContainer>
+      );
     } else if (this.state.status === STATUS.RESOLVED) {
       return (
         <ListContainer>
@@ -95,17 +101,32 @@ export class ImageGallery extends Component {
             articles={this.state.articles}
             fullViewHandle={this.fullViewHandle}
           />
-          <button type="button" onClick={this.handleLoadMoreButton}>
+          <LoadMoreButton type="button" onClick={this.handleLoadMoreButton}>
             Load More...
-          </button>
+          </LoadMoreButton>
         </ListContainer>
       );
     } else if (this.state.status === STATUS.REJECTED) {
-      return <ListContainer><h1>Something went wrong. {this.state.error}</h1></ListContainer>;
+      return (
+        <ListContainer>
+          <h1>Something went wrong. {this.state.error}</h1>
+        </ListContainer>
+      );
     }
   }
 }
 
-const ListContainer = styled.ul`
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   padding-top: 100px;
-`
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 25px;
+  margin: 0 auto;
+`;
+
+const LoadMoreButton = styled.button`
+  height: 25px;
+  justify-self: center;
+`;

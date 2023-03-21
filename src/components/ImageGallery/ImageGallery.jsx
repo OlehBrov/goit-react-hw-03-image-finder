@@ -69,7 +69,7 @@ export class ImageGallery extends Component {
 
   fullViewHandle = (e, picId) => {
     e.preventDefault();
-    // e.stopPropagation();
+    e.stopPropagation();
     console.log('state befort find', this.state);
     console.log('EVENT', e);
     const largeImg = this.state.articles.find(el => {
@@ -78,13 +78,7 @@ export class ImageGallery extends Component {
     console.log('largeImg', largeImg);
     this.props.modalWindowHandler(largeImg);
     console.log('state after find', this.state);
-    // this.setState({articles: this.props.articles,  status: STATUS.RESOLVED})
-
-    // this.props.modalWindowHandler(
-    //   this.state.articles.find(el => {
-    //     return el.id === picId;
-    //   })
-    // );
+    
   };
   render() {
     if (this.state.status === STATUS.IDLE) {

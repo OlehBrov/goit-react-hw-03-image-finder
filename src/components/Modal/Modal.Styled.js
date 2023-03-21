@@ -9,7 +9,8 @@ export const ModalWindow = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 0, 0, 0.2);
+  background-color: rgba(18, 17, 17, 0.3)  ;
+  backdrop-filter: blur(5px);
   justify-content: center;
   align-items: center;
   top: 0;
@@ -23,8 +24,9 @@ export const ModalWindow = styled.div`
   & > div {
     position: relative;
   display: flex;
-  width: 500px;
-  height: 500px;
+  /* transform: translate(50%, 50%); */
+  width: auto;
+  height: auto;
   background-color: beige;
   border: 1px solid black;
   }

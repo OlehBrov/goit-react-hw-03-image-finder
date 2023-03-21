@@ -22,7 +22,7 @@ export class Modal extends Component {
   };
   render() {
     return (
-      <ModalWindow className="overlay" onClick={this.onModalClick}>
+      <ModalWindow className="overlay" onClick={() => this.onModalClick }>
         <div className="modal">
           {this.props.children}
         </div>

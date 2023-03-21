@@ -1,40 +1,54 @@
 import { Component } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Searchbar } from './Searcbar/Searchbar';
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
+    articles: [], 
     searchQuery: '',
+    modalURL: '',
+    modalIsVisible: false,
   };
 
-  //  getImages(inputValue) {
-  //    fetch(
-  //     `https://pixabay.com/api/?key=33350252-53a75f568ce69e642e03bf7bf&?=${inputValue}`
-  //   )
-  //     .then(r => r.json())
-  //     .then(galleryData => this.setState({ picCards: galleryData, isLoading: false }))
-
-  // };
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.searchQuery !== prevState.searchQuery) {
-  //     console.log('this.state.searchQuery', this.state.searchQuery);
-  //     console.log('prevState.searchQuery', prevState.searchQuery);
-  //   }
-  // }
+  handlerStateChange = articles => {
+    console.log('Articles in app', articles);
+    this.setState({ articles });
+  };
   searchInputHandler = inputValue => {
     console.log('searchInputHandler', inputValue);
     this.setState({ searchQuery: inputValue });
   };
 
+  modalWindowHandler = image => {
+    console.log('PageURL', image);
+    this.setState(prevState => {
+      return { modalIsVisible: !prevState.modalIsVisible };
+    });
+    this.setState({
+      modalURL: image.largeImageURL,
+    });
+  };
+
   render() {
+    
     return (
       <>
+        {this.state.modalIsVisible&&<Modal
+            modalURL={this.state.modalURL}
+            modalWindowHandler={this.modalWindowHandler}
+          >
+            <img src={this.state.modalURL} alt="" />
+          </Modal>}
         <Searchbar searchInputHandler={this.searchInputHandler} />
-        <ImageGallery searchQuery={this.state.searchQuery} />
+        <ImageGallery
+          articles={this.state.articles}
+          searchQuery={this.state.searchQuery}
+          modalWindowHandler={this.modalWindowHandler}
+          handlerStateChange={this.handlerStateChange}
+        />
 
         {/* <Loader></Loader> */}
-        {/* <Button></Button> */}
-        {/* <Modal></Modal> */}
       </>
     );
   }

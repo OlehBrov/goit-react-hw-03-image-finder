@@ -1,74 +1,105 @@
 import { Component } from 'react';
-// import { getImages } from 'components/Fetch/FetchURL';
 import { FetchUrl } from 'components/Fetch/FetchURL';
-// const API_KEY = '33350252-53a75f568ce69e642e03bf7bf';
+import { GalleryItem } from '../GalleryItem/GalleryItem';
 const STATUS = {
   IDLE: 'idle',
   PENDING: 'pending',
-  REJECTED: 'rejeced',
+  REJECTED: 'rejected',
   RESOLVED: 'resolved',
 };
 export class ImageGallery extends Component {
   state = {
-    articles: [],
+    articles: this.props.articles,
     status: STATUS.IDLE,
-    // searchQuery: this.props.searchQuery,
+    articlesPage: 1,
+    error: '',
   };
   componentDidUpdate(prevProps, prevState) {
-    console.log("prevProps", prevProps)
-    console.log('this props in update', this.props.searchQuery)
+    // console.log('PrevState', prevState)
+    // if (prevState.articles.length !== this.state.articles.length) {
+    //   this.props.handlerStateChange(this.state.articles)
+    // }
     if (prevProps.searchQuery !== this.props.searchQuery) {
-      console.log('inside IF')
-    this.setState({ status: STATUS.PENDING });
-    FetchUrl(this.props.searchQuery)
+      console.log('componentDidUpdate fire');
+      this.setState({ status: STATUS.PENDING });
+      FetchUrl(this.props.searchQuery, this.state.articlesPage)
+        .then(data => {
+          console.log('DATA in update', data);
+          if (data.data.total === 0) {
+            return Promise.reject('No pictures available on your request ((');
+          } else
+            this.setState({
+              articles: data.data.hits,
+              status: STATUS.RESOLVED,
+              articlesPage: 2,
+            });
+        })
+        .catch(error => {
+          this.setState({ status: STATUS.REJECTED, error });
+          console.log('console in catch', error);
+        });
+    }
+  }
+  handleLoadMoreButton = e => {
+    this.setState(prevState => {
+      return { articlesPage: prevState.articlesPage + 1 };
+    });
+    FetchUrl(this.props.searchQuery, this.state.articlesPage)
       .then(data => {
-        console.log('DATA in update', data)
-        this.setState({ articles: data.data.hits, status: STATUS.RESOLVED })
+        if (data.data.total === 0) {
+          return Promise.reject('No data available!');
+        }
+        this.setState(prevState => {
+          return {
+            articles: [...prevState.articles, ...data.data.hits],
+            status: STATUS.RESOLVED,
+          };
+        });
       })
       .catch(error => {
-        this.setState({ statis: STATUS.REJECTED });
+        this.setState({ status: STATUS.REJECTED, error });
+        console.log(error);
       });
-  }
-}
+  };
 
-  // updateGallery = () => {
-  //   this.setState({ status: STATUS.PENDING });
-  //   FetchUrl.handleSearchByWord()
-  //     .then(data =>
-  //       this.setState(prevState => {
-  //         return [...prevState.articles, data];
-  //       })
-  //     )
-  //     .catch(error => {
-  //       this.setState({ statis: STATUS.REJECTED });
-  //     });
-  // };
-  
-  // dataHandler = galleryData => {
-  //   console.log('this.props.galleryData;', galleryData);
-  //   this.setState({ articles: this.props.galleryData });
-  // };
+  fullViewHandle = (e, picId) => {
+    e.preventDefault();
+    // e.stopPropagation();
+    console.log("state befort find", this.state)
+    console.log('EVENT', e);
+    const largeImg = this.state.articles.find(el => {
+      return el.id === picId;
+    });
+    console.log('largeImg', largeImg)
+    this.props.modalWindowHandler(largeImg)
+    console.log("state after find", this.state)
+    // this.setState({articles: this.props.articles,  status: STATUS.RESOLVED})
 
+    // this.props.modalWindowHandler(
+    //   this.state.articles.find(el => {
+    //     return el.id === picId;
+    //   })
+    // );
+  };
   render() {
     if (this.state.status === STATUS.IDLE) {
       return <h1>IDLE</h1>;
-    }
-    if (this.state.status === STATUS.PENDING) {
+    } else if (this.state.status === STATUS.PENDING) {
       return <h1>PENDING</h1>;
-    }
-    if (this.state.status === STATUS.RESOLVED) {
+    } else if (this.state.status === STATUS.RESOLVED) {
       return (
-        <ul>
-          {this.state.articles.map(galleryItem => (
-            <li key={galleryItem.id}>
-              {' '}
-              <img src={galleryItem.previewURL} alt={galleryItem.tags} />
-            </li>
-          ))}
-        </ul>
+        <>
+          <GalleryItem
+            articles={this.state.articles}
+            fullViewHandle={this.fullViewHandle}
+          />
+          <button type="button" onClick={this.handleLoadMoreButton}>
+            Load More...
+          </button>
+        </>
       );
+    } else if (this.state.status === STATUS.REJECTED) {
+      return <h1>Something went wrong. {this.state.error}</h1>;
     }
   }
 }
-
-// console.log(this.props.galleryData)

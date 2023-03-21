@@ -1,6 +1,11 @@
 import { Component } from 'react';
 import { FetchUrl } from 'components/Fetch/FetchURL';
 import { GalleryItem } from '../GalleryItem/GalleryItem';
+import { IdleView } from 'components/Views/IdleView';
+import { PendingView } from 'components/Views/PendingView';
+// import { MdImageSearch } from 'react-icons/md';
+// import { IconContext } from 'react-icons';
+
 const STATUS = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -65,14 +70,14 @@ export class ImageGallery extends Component {
   fullViewHandle = (e, picId) => {
     e.preventDefault();
     // e.stopPropagation();
-    console.log("state befort find", this.state)
+    console.log('state befort find', this.state);
     console.log('EVENT', e);
     const largeImg = this.state.articles.find(el => {
       return el.id === picId;
     });
-    console.log('largeImg', largeImg)
-    this.props.modalWindowHandler(largeImg)
-    console.log("state after find", this.state)
+    console.log('largeImg', largeImg);
+    this.props.modalWindowHandler(largeImg);
+    console.log('state after find', this.state);
     // this.setState({articles: this.props.articles,  status: STATUS.RESOLVED})
 
     // this.props.modalWindowHandler(
@@ -83,9 +88,11 @@ export class ImageGallery extends Component {
   };
   render() {
     if (this.state.status === STATUS.IDLE) {
-      return <h1>IDLE</h1>;
+      return (
+        <IdleView/>
+      );
     } else if (this.state.status === STATUS.PENDING) {
-      return <h1>PENDING</h1>;
+      return <PendingView/>;
     } else if (this.state.status === STATUS.RESOLVED) {
       return (
         <>
@@ -103,3 +110,4 @@ export class ImageGallery extends Component {
     }
   }
 }
+

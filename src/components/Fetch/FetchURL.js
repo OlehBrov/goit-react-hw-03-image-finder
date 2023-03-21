@@ -11,8 +11,9 @@ export const FetchUrl = (searchQuery, page) => {
             image_type: 'photo',
             orientation: 'horizontal',
             safesearch: true,
-            // per_page: this.imgsPerPage,
+            per_page: 40,
             page: page,
+            webformatWidth: 960,
             validateStatus: status => {
               return status >= 200 && status < 300;
             },

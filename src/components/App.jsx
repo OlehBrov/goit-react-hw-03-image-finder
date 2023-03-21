@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Searchbar } from './Searcbar/Searchbar';
 import { Modal } from './Modal/Modal';
+import styled from 'styled-components';
 
 export class App extends Component {
   state = {
@@ -33,7 +34,7 @@ export class App extends Component {
   render() {
     
     return (
-      <>
+      <Container>
         {this.state.modalIsVisible&&<Modal
             modalURL={this.state.modalURL}
             modalWindowHandler={this.modalWindowHandler}
@@ -49,7 +50,16 @@ export class App extends Component {
         />
 
         {/* <Loader></Loader> */}
-      </>
+      </Container>
     );
   }
 }
+
+const Container  = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+
+`

@@ -5,13 +5,13 @@ export class Modal extends Component {
   state = {};
   componentDidMount() {
     console.log('MOdal is mount');
-    // window.addEventListener('click', this.onModalClick);
+    window.addEventListener('click', this.onModalClick);
     window.addEventListener('keydown', this.onModalClick);
   }
   componentWillUnmount() {
     console.log('MOdal UNmount');
 
-    // window.removeEventListener('click', this.onModalClick);
+    window.removeEventListener('click', this.onModalClick);
     window.removeEventListener('keydown', this.onModalClick);
   }
     onModalClick = e => {

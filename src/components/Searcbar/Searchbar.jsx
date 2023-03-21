@@ -10,13 +10,11 @@ export class Searchbar extends Component {
   };
 
   searchSubmit = values => {
-    console.log('searchSubmit', values);
     this.props.searchInputHandler(this.state.searchQuery);
     this.setState({ searchQuery: '' });
   };
   handleChange = e => {
     const { value } = e.target;
-    console.log('value', value);
     this.setState({ searchQuery: value });
   };
   render() {

@@ -13,16 +13,13 @@ export class App extends Component {
   };
 
   handlerStateChange = articles => {
-    console.log('Articles in app', articles);
     this.setState({ articles });
   };
   searchInputHandler = inputValue => {
-    console.log('searchInputHandler', inputValue);
     this.setState({ searchQuery: inputValue });
   };
 
   modalWindowHandler = image => {
-    console.log('PageURL', image);
     this.setState(prevState => {
       return { modalIsVisible: !prevState.modalIsVisible };
     });

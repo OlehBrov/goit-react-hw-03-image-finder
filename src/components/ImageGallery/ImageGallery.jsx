@@ -21,16 +21,11 @@ export class ImageGallery extends Component {
     error: '',
   };
   componentDidUpdate(prevProps, prevState) {
-    // console.log('PrevState', prevState)
-    // if (prevState.articles.length !== this.state.articles.length) {
-    //   this.props.handlerStateChange(this.state.articles)
-    // }
+
     if (prevProps.searchQuery !== this.props.searchQuery) {
-      console.log('componentDidUpdate fire');
       this.setState({ status: STATUS.PENDING });
       FetchUrl(this.props.searchQuery, this.state.articlesPage)
         .then(data => {
-          console.log('DATA in update', data);
           if (data.data.total === 0) {
             return Promise.reject('No pictures available on your request ((');
           } else
@@ -42,7 +37,6 @@ export class ImageGallery extends Component {
         })
         .catch(error => {
           this.setState({ status: STATUS.REJECTED, error });
-          console.log('console in catch', error);
         });
     }
   }
@@ -71,14 +65,10 @@ export class ImageGallery extends Component {
   fullViewHandle = (e, picId) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('state befort find', this.state);
-    console.log('EVENT', e);
     const largeImg = this.state.articles.find(el => {
       return el.id === picId;
     });
-    console.log('largeImg', largeImg);
     this.props.modalWindowHandler(largeImg);
-    console.log('state after find', this.state);
   };
   render() {
     if (this.state.status === STATUS.IDLE) {

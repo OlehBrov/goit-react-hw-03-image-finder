@@ -59,7 +59,7 @@ const Container  = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
+  /* padding-left: 15px;
+  padding-right: 15px; */
 
 `

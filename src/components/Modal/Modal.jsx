@@ -7,12 +7,14 @@ export class Modal extends Component {
     console.log('MOdal is mount');
     window.addEventListener('click', this.onModalClick);
     window.addEventListener('keydown', this.onModalClick);
+    document.body.style.overflow = 'hidden';
   }
   componentWillUnmount() {
     console.log('MOdal UNmount');
 
     window.removeEventListener('click', this.onModalClick);
     window.removeEventListener('keydown', this.onModalClick);
+     document.body.style.overflow = 'unset';
   }
     onModalClick = e => {
       

@@ -3,6 +3,7 @@ import { FetchUrl } from 'components/Fetch/FetchURL';
 import { GalleryItem } from '../GalleryItem/GalleryItem';
 import { IdleView } from 'components/Views/IdleView';
 import { PendingView } from 'components/Views/PendingView';
+import styled from 'styled-components';
 // import { MdImageSearch } from 'react-icons/md';
 // import { IconContext } from 'react-icons';
 
@@ -83,13 +84,13 @@ export class ImageGallery extends Component {
   render() {
     if (this.state.status === STATUS.IDLE) {
       return (
-        <IdleView/>
+       <ListContainer> <IdleView/></ListContainer>
       );
     } else if (this.state.status === STATUS.PENDING) {
-      return <PendingView/>;
+      return <ListContainer><PendingView/>;</ListContainer>
     } else if (this.state.status === STATUS.RESOLVED) {
       return (
-        <>
+        <ListContainer>
           <GalleryItem
             articles={this.state.articles}
             fullViewHandle={this.fullViewHandle}
@@ -97,11 +98,14 @@ export class ImageGallery extends Component {
           <button type="button" onClick={this.handleLoadMoreButton}>
             Load More...
           </button>
-        </>
+        </ListContainer>
       );
     } else if (this.state.status === STATUS.REJECTED) {
-      return <h1>Something went wrong. {this.state.error}</h1>;
+      return <ListContainer><h1>Something went wrong. {this.state.error}</h1></ListContainer>;
     }
   }
 }
 
+const ListContainer = styled.ul`
+  padding-top: 100px;
+`

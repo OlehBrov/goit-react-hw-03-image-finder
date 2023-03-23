@@ -21,11 +21,3 @@ export const FetchUrl = (searchQuery, page) => {
  
 };
 
-//  getImages(inputValue) {
-//      fetch(
-//       `https://pixabay.com/api/?key=33350252-53a75f568ce69e642e03bf7bf&?=${inputValue}`
-//     )
-//       .then(r => r.json())
-//       .then(galleryData => this.setState({ picCards: galleryData, isLoading: false }))
-
-//   };

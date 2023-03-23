@@ -19,27 +19,41 @@ export class ImageGallery extends Component {
     status: STATUS.IDLE,
     articlesPage: 1,
     error: '',
+    isLoadMoreEnabled: false,
   };
   componentDidUpdate(prevProps, prevState) {
-
     if (prevProps.searchQuery !== this.props.searchQuery) {
       this.setState({ status: STATUS.PENDING });
-      FetchUrl(this.props.searchQuery, this.state.articlesPage)
-        .then(data => {
-          if (data.data.total === 0) {
-            return Promise.reject('No pictures available on your request ((');
-          } else
-            this.setState({
-              articles: data.data.hits,
-              status: STATUS.RESOLVED,
-              articlesPage: 2,
-            });
-        })
-        .catch(error => {
-          this.setState({ status: STATUS.REJECTED, error });
-        });
+      if (this.props.searchQuery.trim() !== '') {
+        FetchUrl(this.props.searchQuery, this.state.articlesPage)
+          .then(data => {
+            if (data.data.total === 0) {
+              return Promise.reject('No pictures available on your request ((');
+            } else
+              this.setState({
+                articles: data.data.hits,
+                status: STATUS.RESOLVED,
+                articlesPage: 2,
+                totalHits: data.data.totalHits,
+                isLoadMoreEnabled: data.data.totalHits > data.data.hits.length,
+              });
+          })
+          .catch(error => {
+            this.setState({ status: STATUS.REJECTED, error });
+          });
+      } else {
+        alert('Invalid search query');
+        this.setState({ status: STATUS.IDLE });
+      }
     }
   }
+
+  // checkIfMoreAvailable = (data) => {
+  //   console.log('this.state.totalHits', this.state.totalHits);
+  //   console.log('this.state.articles.length', this.state.articles.length);
+
+  //   this.setState({isLoadMoreEnabled:this.state.totalHits <= data.data.hits}) ;
+  // };
   handleLoadMoreButton = e => {
     this.setState(prevState => {
       return { articlesPage: prevState.articlesPage + 1 };
@@ -53,6 +67,7 @@ export class ImageGallery extends Component {
           return {
             articles: [...prevState.articles, ...data.data.hits],
             status: STATUS.RESOLVED,
+            isLoadMoreEnabled: data.data.totalHits > data.data.hits.length,
           };
         });
       })
@@ -91,9 +106,15 @@ export class ImageGallery extends Component {
             articles={this.state.articles}
             fullViewHandle={this.fullViewHandle}
           />
-          <LoadMoreButton type="button" onClick={this.handleLoadMoreButton}>
-            Load More...
-          </LoadMoreButton>
+          {this.state.isLoadMoreEnabled && (
+            <LoadMoreButton
+              type="button"
+              // disabled={this.state.isLoadMoreEnabled}
+              onClick={this.handleLoadMoreButton}
+            >
+              Load More...
+            </LoadMoreButton>
+          )}
         </ListContainer>
       );
     } else if (this.state.status === STATUS.REJECTED) {

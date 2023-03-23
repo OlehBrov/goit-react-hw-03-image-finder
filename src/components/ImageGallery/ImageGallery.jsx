@@ -20,6 +20,7 @@ export class ImageGallery extends Component {
     articlesPage: 1,
     error: '',
     isLoadMoreEnabled: false,
+    itemsPerPage: 40,
   };
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchQuery !== this.props.searchQuery) {
@@ -35,7 +36,9 @@ export class ImageGallery extends Component {
                 status: STATUS.RESOLVED,
                 articlesPage: 2,
                 totalHits: data.data.totalHits,
-                isLoadMoreEnabled: data.data.totalHits > data.data.hits.length,
+                isLoadMoreEnabled:
+                  data.data.hits.length !== 0 &&
+                  data.data.totalHits > data.data.hits.length,
               });
           })
           .catch(error => {
@@ -67,7 +70,14 @@ export class ImageGallery extends Component {
           return {
             articles: [...prevState.articles, ...data.data.hits],
             status: STATUS.RESOLVED,
-            isLoadMoreEnabled: data.data.totalHits > data.data.hits.length,
+            isLoadMoreEnabled:
+              data.data.totalHits %
+                [...prevState.articles, ...data.data.hits].length ===
+                0 &&
+              data.data.totalHits ===
+                [...prevState.articles, ...data.data.hits].length
+                ? false
+                : true,
           };
         });
       })

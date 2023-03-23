@@ -28,7 +28,7 @@ export class ImageGallery extends Component {
       if (this.props.searchQuery.trim() !== '') {
         FetchUrl(this.props.searchQuery, this.state.articlesPage)
           .then(data => {
-            if (data.data.total === 0) {
+            if (data.data.total === 0 || data.data.hits.length === 0) {
               return Promise.reject('No pictures available on your request ((');
             } else
               this.setState({
